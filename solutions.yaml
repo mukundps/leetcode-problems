@@ -1,0 +1,209 @@
+01 Two Sum:
+  SOL01.java: |
+    class Solution {
+      public int[] twoSum(int[] nums, int target) {
+          int one = -1;
+          int two = -1;
+          for( int i = 0; i < nums.length; i++){
+              for( int j = 1; j < nums.length; j++){
+                  if(nums[i] + nums[j] == target && i != j){
+                      one = i;
+                      two = j;
+                  }
+              }
+          }
+          int[] solution = {one, two};
+          return solution;
+      }
+    }
+  SOL02.java: |
+    class Solution {
+      public int[] twoSum(int[] nums, int target) {
+          int one = -1;
+          int two = -1;
+          int index = 0;
+          HashMap<Integer, Integer> hashMap = new HashMap<>();
+          for(index=0; index < nums.length; index++){
+              hashMap.put(nums[index], index);
+          }
+          for(index=0; index < nums.length; index++){
+              int first = nums[index];
+              int second = target-first;
+              if( hashMap.containsKey(second) && hashMap.get(second) != index){
+                  one = index;
+                  two = hashMap.get(second);
+                  break;
+              }
+          }
+          int[] solution = {one, two};
+          return solution;
+      }
+    }
+
+141 Linked list cycle:
+  SOL01.java: |
+    public class Solution {
+      public boolean hasCycle(ListNode head) {
+          HashSet<ListNode> nodeHash = new HashSet<>();
+
+          while(head != null){
+              if(nodeHash.contains(head))
+                  return true;
+              nodeHash.add(head);
+              head = head.next;
+          }
+          
+          return false;
+      }
+    }
+
+268 Missing Number:
+  SOL01.java: |
+    class Solution {
+      public int missingNumber(int[] nums) {
+          int length = nums.length;
+          int index = 0, solution = 0;
+          HashMap<Integer, Integer> set = new HashMap<>();
+          if(length == 1 && nums[0] == 0){
+              return 1;
+          }
+          else{
+              while(index < length){
+                  set.put(nums[index], index);
+                  index += 1;
+              }
+              index = 1;
+              while(index <= length){
+                  if(!set.containsKey(index))
+                      solution = index;
+                  index+=1;
+              }
+          }
+          return solution;
+      }
+    }
+
+20 Valid Parentheses:
+  SOL01.java: |
+    class Solution {
+        public boolean isValid(String s) {
+          char[] arr = s.toCharArray();
+          Stack<Character> stack = new Stack<Character>();
+          int index = 0;
+          if(arr.length == 1)
+              return false;
+          if(s == "")
+              return true;
+          while(index < arr.length){
+              if(stack.isEmpty() || arr[index] == '(' || arr[index] == '{' || arr[index] == '[')
+                  stack.push(arr[index]);
+              else if (arr[index] == ')' && stack.peek() == '(' || arr[index] == ']' && stack.peek() == '[' || arr[index] == '}' && stack.peek() == '{')
+                  stack.pop();
+              else
+                  return false;
+              index+=1;
+          }
+          if(!stack.isEmpty())
+              return false;
+          return true;
+        }
+    }
+
+217 Contains Duplicate:
+  SOL01.java: |
+    // <TimeLimitExceeded>
+    class Solution {
+        public boolean containsDuplicate(int[] nums) {
+            int length = nums.length;
+
+            for(int i = 0; i < length; i++){
+                for (int j = 1; j < length; j++){
+                    if( i != j && nums[i] == nums[j]){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+  SOL02.java: |
+    class Solution {
+        public boolean containsDuplicate(int[] nums) {
+            int length = nums.length;
+            Arrays.sort(nums);
+            for (int i = 1; i < length; i++)
+                if ( nums[i-1] == nums[i])
+                    return true;
+            return false;
+        }
+    }
+  SOL03.java: |
+    class Solution {
+        public boolean containsDuplicate(int[] nums) {
+            HashMap<Integer, Integer> items = new HashMap<>();
+            for (int num:nums) {
+                if (items.containsKey(num) && items.get(num) >= 1)
+                    return true;
+                items.put(num, items.getOrDefault(num, 0) + 1);
+            }
+            return false;
+        }
+    }
+
+448 Find All Numbers Disappeared in an Array:
+  SOL01.java: |
+    class Solution {
+      public List<Integer> findDisappearedNumbers(int[] nums) {
+        int length = nums.length;
+        int index = 0;
+        ArrayList<Integer> solution = new ArrayList<Integer>();
+        HashMap<Integer, Integer> set = new HashMap<>();
+        while(index < length){
+          set.put(nums[index], index);
+          index += 1;
+        }
+        index = 1;
+        while(index <= length){
+          if(!set.containsKey(index))
+            solution.add(index);
+          index+=1;
+        }
+        return solution;
+      }
+    }
+
+136. Single Number:
+  SOL01.java: |
+    class Solution {
+      public int singleNumber(int[] nums) {
+        HashMap<Integer, Integer> set = new HashMap<>();
+        int len = nums.length;
+        int index = 0, sol = 0;
+        while( index < len ) {
+          if( set.get(nums[index]) == null)
+            set.put(nums[index], 1);
+          else
+            set.remove(nums[index], 1);
+          index += 1;
+        }
+        for(Map.Entry<Integer, Integer> entry : set.entrySet()){
+          if(entry.getValue() == 1)
+            sol = entry.getKey();
+        }
+        return sol;
+      }
+    }
+  SOL02.java: |
+    class Solution {
+      public int singleNumber(int[] nums) {
+        HashMap<Integer, Integer> set = new HashMap<>();
+        for (int num:nums) {
+          set.put(num, set.getOrDefault(num, 0) + 1);
+        }
+        for (int num:nums) {
+          if (set.get(num) == 1)
+            return num;
+        }
+        return -1;
+      }
+    }
