@@ -274,3 +274,188 @@
         return sol;
       }
     }
+
+303. Range Sum Query - Immutable:
+  SOL01.java: |
+    class NumArray {
+      private int[] num;
+
+      public NumArray(int[] nums) {
+        this.num = nums;
+      }
+
+      public int sumRange(int left, int right) {
+        int sum = 0;
+        while (right >= left) {
+          sum += this.num[right];
+          right -= 1;
+        }
+        return sum;
+      }
+    }
+
+    /**
+    * Your NumArray object will be instantiated and called as such:
+    * NumArray obj = new NumArray(nums);
+    * int param_1 = obj.sumRange(left,right);
+    */
+  SOL02.java: |
+    class NumArray {
+      private int[] num;
+
+      public NumArray(int[] nums) {
+        this.num = nums;
+        for (int i = 1; i < num.length; i++) {
+          num[i] += num[i-1];
+        }
+      }
+
+      public int sumRange(int left, int right) {
+        if (left == 0)
+          return num[right];
+        return num[right] - num[left-1];
+      }
+    }
+
+    /**
+    * Your NumArray object will be instantiated and called as such:
+    * NumArray obj = new NumArray(nums);
+    * int param_1 = obj.sumRange(left,right);
+    */
+
+338. Counting Bits:
+  SOL01.java: |
+    class Solution {
+      public int[] countBits(int n) {
+        int res[] = new int[n + 1]; // create one result array, 
+        // & our array size is n + 1 because we have to cover 0 as well
+        
+        for(int i = 0; i <= n; i++){ // run a loop to store all the values we get from a solve function
+          res[i] = solve(i);
+        }
+        return res;
+      }
+      public int solve(int n){
+        // base condition
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        
+        if(n % 2 == 0) return solve(n / 2); // handling even case
+        else return 1 + solve(n / 2); // handling odd case
+      }
+    }
+  SOL02.java: |
+    class Solution {
+      public int[] countBits(int n) {
+        int res[] = new int[n + 1]; 
+        for(int i = 0; i <= n; i++){ 
+          res[i] = solve(i, res);
+        }
+        return res;
+      }
+
+      public int solve(int n, int memo[]){
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        if(memo[n] != 0) return memo[n]; // if memo of n answer is already available we will re-use it & not go further for calculation
+        // but if you are coming for the first time then, store that value in memo
+        if(n % 2 == 0) {
+          memo[n] = solve(n / 2, memo);
+          return solve(n / 2, memo);
+        }
+        else {
+          memo[n] = 1 + solve(n / 2, memo);
+          return 1 + solve(n / 2, memo);
+        } 
+      }
+    }
+  SOL03.java: |
+    class Solution {
+      public int[] countBits(int n) {
+        int[] res = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+          res[i] = res[i >> 1] + (i & 1);
+        }
+        return res;
+      }
+    }
+141. Linked List Cycle:
+  SOL01.cpp: |
+    /**
+    * Definition for singly-linked list.
+    * struct ListNode {
+    *     int val;
+    *     ListNode *next;
+    *     ListNode(int x) : val(x), next(NULL) {}
+    * };
+    */
+    class Solution {
+    public:
+      bool hasCycle(ListNode *head) {
+        ListNode *slow = head, *fast = head;
+        
+        if(head == NULL || head->next == NULL)
+          return false;
+        
+        while(fast->next && fast->next->next){
+          slow = slow->next;
+          fast = fast->next->next;
+          
+          if (slow == fast){
+            return true;
+          }
+        
+        }
+        return false;   
+      }
+    };
+  SOL01.java: |
+    /**
+    * Definition for singly-linked list.
+    * class ListNode {
+    *     int val;
+    *     ListNode next;
+    *     ListNode(int x) {
+    *         val = x;
+    *         next = null;
+    *     }
+    * }
+    */
+    public class Solution {
+      public boolean hasCycle(ListNode head) {
+        HashSet<ListNode> nodeHash = new HashSet<>();
+
+        while(head != null){
+          if(nodeHash.contains(head))
+            return true;
+          nodeHash.add(head);
+          head = head.next;
+        }
+        
+        return false;
+      }
+    }
+  SOL02.java: |
+    /**
+    * Definition for singly-linked list.
+    * class ListNode {
+    *     int val;
+    *     ListNode next;
+    *     ListNode(int x) {
+    *         val = x;
+    *         next = null;
+    *     }
+    * }
+    */
+    public class Solution {
+      public boolean hasCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(slow != null && fast != null && fast.next != null) {
+          slow = slow.next;
+          fast = fast.next.next;
+          if(slow == fast)
+            return true;
+        }
+        return false;
+      }
+    }
